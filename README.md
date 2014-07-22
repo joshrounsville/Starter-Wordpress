@@ -1,2 +1,1 @@
-Starter-Wordpress
-=================
+Wordpress Starter
