@@ -19,7 +19,9 @@ var gulp = require('gulp'),
     port = 3000,
     gutil = require('gulp-util'),
     concat = require('gulp-concat'),
-    rimraf = require('gulp-rimraf');
+    rimraf = require('gulp-rimraf'),
+    serveStatic = require('serve-static'),
+    serveIndex = require('serve-index');
 
 
 
@@ -27,17 +29,21 @@ var gulp = require('gulp'),
 // set basic tasks
 
 gulp.task('css', function() {
-  return gulp.src('./library/scss/styles.scss')
+  return gulp.src('./library/scss/components.scss')
     .pipe(sass({ style: 'expanded', lineNumbers: true }))
     .on('error', gutil.log)
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
     .pipe(minifycss())
-    .pipe(gulp.dest('library/css'))
+    .pipe(rename({
+      basename: 'styles',
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest('./library/css/'))
     .pipe(livereload(server));
 });
 
 gulp.task('clear', function() {
-  return gulp.src('./library/styles/*.scss', { read: false })
+  return gulp.src('./library/css/*.scss', { read: false })
     .pipe(rimraf({ force: true }));
 });
 
@@ -70,8 +76,8 @@ gulp.task('webserver', function() {
       directory = path.resolve('.');
 
   var app = connect()
-    .use(connect.static(base))
-    .use(connect.directory(directory))
+    .use(serveStatic(base))
+    .use(serveIndex(directory))
 
   http.createServer(app).listen(port, hostname);
 });
@@ -84,17 +90,14 @@ gulp.task('default', [ 'css', 'lint', 'minify' ]);
 
 gulp.task('dev', [ 'default', 'webserver', 'images' ], function() {
 
-  server.listen(35729, function (err) {
-    if (err) {
-      return console.log(err)
-    };
+  setTimeout(function() {
+    cp.exec('open http://localhost:' + port);
+  }, 1000);
 
-    gulp.watch('./library/scss/**/*.scss', [ 'css', 'clear' ]);
+  gulp.watch('./library/scss/**/*.scss', [ 'css', 'clear' ]);
 
-    gulp.watch('./library/js/main.js', [ 'lint' ] );
+  gulp.watch('./library/js/main.js', [ 'lint' ] );
 
-    gulp.watch('./library/js/*.js', [ 'minify' ]);
-
-  });
+  gulp.watch('./library/js/*.js', [ 'minify' ]);
 
 });

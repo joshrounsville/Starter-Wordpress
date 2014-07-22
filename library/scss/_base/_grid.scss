@@ -105,9 +105,7 @@
 
 
 
-/**** **** **** **** ****
-  Large Screen
-**** **** **** **** ****/
+/*==========  LARGE SCREEN  ==========*/
 
 @include breakpoint(large) {
 
@@ -204,9 +202,7 @@
 }
 
 
-/**** **** **** **** ****
-  Medium Screen
-**** **** **** **** ****/
+/*==========  MEDIUM SCREEN  ==========*/
 
 @include breakpoint(medium) {
 
@@ -303,9 +299,7 @@
 }
 
 
-/**** **** **** **** ****
-  Small Screen
-**** **** **** **** ****/
+/*==========  SMALL SCREEN  ==========*/
 
 @include breakpoint(small) {
 
